@@ -6,42 +6,47 @@
     <title>NEON MARKET</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Arial;background:linear-gradient(135deg,#0a0a2a,#1a0033);color:#fff}
-        .header{background:rgba(0,0,0,0.85);padding:12px;display:flex;justify-content:space-between;border-bottom:1px solid #bf40ff}
-        .logo{color:#bf40ff;font-size:20px;font-weight:bold}
-        .nav-btn{background:rgba(191,64,255,0.2);border:1px solid #bf40ff;color:#bf40ff;padding:6px 12px;border-radius:20px;cursor:pointer;margin-left:5px}
-        .products-grid{max-width:1200px;margin:20px auto;padding:0 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-        @media(max-width:800px){.products-grid{grid-template-columns:repeat(2,1fr)}}
-        @media(max-width:500px){.products-grid{grid-template-columns:1fr}}
-        .product-card{background:rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;cursor:pointer;border:1px solid rgba(191,64,255,0.3);transition:0.2s}
-        .product-card:hover{transform:translateY(-3px);border-color:#bf40ff}
-        .product-image{width:100%;height:180px;object-fit:cover}
-        .product-info{padding:10px}
-        .product-name{font-size:14px;font-weight:bold}
-        .product-price{color:#bf40ff;font-size:16px;font-weight:bold;margin:5px 0}
-        .product-meta{font-size:11px;color:rgba(255,255,255,0.6)}
-        .card-buttons{display:flex;gap:8px;margin-top:8px}
-        .btn{flex:1;padding:6px;border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:bold}
+        body{font-family:'Segoe UI',Arial;background:linear-gradient(135deg,#0a0a2a,#1a0033);color:#fff;min-height:100vh}
+        .header{background:rgba(0,0,0,0.85);padding:15px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #bf40ff;position:sticky;top:0;z-index:100}
+        .logo{color:#bf40ff;font-size:24px;font-weight:bold;text-shadow:0 0 10px #bf40ff}
+        .nav-btn{background:rgba(191,64,255,0.2);border:1px solid #bf40ff;color:#bf40ff;padding:8px 16px;border-radius:25px;cursor:pointer;margin-left:8px;transition:0.3s}
+        .nav-btn:hover{background:#bf40ff;color:#fff}
+        .products-grid{max-width:1200px;margin:30px auto;padding:0 15px;display:grid;grid-template-columns:repeat(3,1fr);gap:25px}
+        @media(max-width:900px){.products-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:550px){.products-grid{grid-template-columns:1fr}}
+        .product-card{background:rgba(255,255,255,0.08);border-radius:15px;overflow:hidden;cursor:pointer;border:1px solid rgba(191,64,255,0.4);transition:0.3s;backdrop-filter:blur(5px)}
+        .product-card:hover{transform:translateY(-8px);border-color:#bf40ff;box-shadow:0 10px 30px rgba(191,64,255,0.3)}
+        .product-image{width:100%;height:210px;object-fit:cover;background:#2a1a3a}
+        .product-info{padding:15px}
+        .product-name{font-size:16px;font-weight:bold;margin-bottom:5px}
+        .product-price{color:#bf40ff;font-size:20px;font-weight:bold;margin:8px 0}
+        .product-meta{font-size:12px;color:#aaa;margin:5px 0}
+        .card-buttons{display:flex;gap:10px;margin-top:12px}
+        .btn{flex:1;padding:8px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;transition:0.2s}
         .btn-wishlist{background:rgba(255,64,64,0.2);color:#ff6b6b;border:1px solid #ff6b6b}
         .btn-cart{background:rgba(191,64,255,0.2);color:#bf40ff;border:1px solid #bf40ff}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);justify-content:center;align-items:center;z-index:1000}
-        .modal-content{background:#1a0033;border-radius:15px;width:90%;max-width:350px;padding:15px;border:2px solid #bf40ff}
-        .modal-content img{width:100%;border-radius:10px}
-        .close{float:right;font-size:24px;cursor:pointer;color:#bf40ff}
-        .sidebar{position:fixed;right:-100%;top:0;width:100%;max-width:350px;height:100%;background:rgba(10,10,30,0.98);z-index:1001;transition:0.3s;padding:15px;border-left:2px solid #bf40ff;overflow-y:auto}
+        .btn-wishlist:hover{background:#ff6b6b;color:#fff}
+        .btn-cart:hover{background:#bf40ff;color:#fff}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);justify-content:center;align-items:center;z-index:2000}
+        .modal-content{background:linear-gradient(135deg,#1a0033,#0a0a2a);border-radius:20px;width:90%;max-width:400px;padding:20px;border:2px solid #bf40ff}
+        .modal-content img{width:100%;border-radius:12px;margin-bottom:10px}
+        .close{float:right;font-size:28px;cursor:pointer;color:#bf40ff;margin-top:-10px}
+        .sidebar{position:fixed;right:-100%;top:0;width:100%;max-width:380px;height:100%;background:rgba(10,10,30,0.98);z-index:1500;transition:0.3s;padding:20px;border-left:2px solid #bf40ff;overflow-y:auto}
         .sidebar.active{right:0}
-        .sidebar-header{display:flex;justify-content:space-between;margin-bottom:15px;border-bottom:1px solid #bf40ff;padding-bottom:8px}
-        .sidebar-header h2{color:#bf40ff;font-size:18px}
-        .sidebar-close{font-size:24px;cursor:pointer;color:#bf40ff}
-        .cart-item,.wishlist-item{background:rgba(191,64,255,0.1);margin-bottom:10px;padding:8px;border-radius:8px;display:flex;gap:8px;align-items:center}
-        .item-image{width:50px;height:50px;object-fit:cover;border-radius:6px}
+        .sidebar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:2px solid #bf40ff;padding-bottom:10px}
+        .sidebar-header h2{color:#bf40ff;font-size:22px}
+        .sidebar-close{font-size:30px;cursor:pointer;color:#bf40ff}
+        .cart-item,.wishlist-item{background:rgba(191,64,255,0.1);margin-bottom:12px;padding:12px;border-radius:12px;display:flex;gap:12px;align-items:center}
+        .item-image{width:60px;height:60px;object-fit:cover;border-radius:8px}
         .item-info{flex:1}
-        .item-name{font-weight:bold;font-size:13px}
-        .item-price{color:#bf40ff;font-size:12px}
-        .delete-btn{background:#ff4040;color:white;border:none;padding:4px 10px;border-radius:5px;cursor:pointer}
-        .checkout-btn{background:#bf40ff;color:white;width:100%;padding:10px;border:none;border-radius:8px;margin-top:12px;cursor:pointer}
-        .loading{text-align:center;padding:40px;color:#bf40ff}
-        .empty{text-align:center;padding:20px;color:rgba(255,255,255,0.5)}
+        .item-name{font-weight:bold;font-size:14px}
+        .item-price{color:#bf40ff;font-size:13px;font-weight:bold}
+        .delete-btn{background:#ff4040;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer}
+        .checkout-btn{background:#bf40ff;color:#fff;width:100%;padding:12px;border:none;border-radius:10px;margin-top:15px;cursor:pointer;font-weight:bold;font-size:16px}
+        .loading{text-align:center;padding:50px;color:#bf40ff;font-size:18px}
+        .empty{text-align:center;padding:30px;color:#888}
+        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#bf40ff;color:#fff;padding:10px 20px;border-radius:30px;z-index:3000;animation:fadeOut 2s forwards}
+        @keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
     </style>
 </head>
 <body>
@@ -55,17 +60,15 @@
     </div>
 </div>
 
-<div class="products-grid" id="grid">
-    <div class="loading">⏳ Yuklanmoqda...</div>
-</div>
+<div class="products-grid" id="grid"><div class="loading">⏳ Mahsulotlar yuklanmoqda...</div></div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <img id="mImg">
-        <h3 id="mName" style="margin-top:8px"></h3>
-        <div id="mPrice" style="font-size:18px;color:#bf40ff;font-weight:bold"></div>
-        <p style="font-size:12px">📏 Razmer: <span id="mSize"></span> | 🎂 Yosh: <span id="mAge"></span></p>
+        <h2 id="mName" style="margin:10px 0 5px"></h2>
+        <div id="mPrice" style="font-size:22px;color:#bf40ff;font-weight:bold"></div>
+        <p style="margin:8px 0">📏 Razmer: <span id="mSize"></span> | 🎂 Yosh: <span id="mAge"></span></p>
         <div class="card-buttons">
             <button class="btn btn-wishlist" onclick="addWishlistModal()">⭐ Istak</button>
             <button class="btn btn-cart" onclick="addCartModal()">🛒 Savat</button>
@@ -73,41 +76,40 @@
     </div>
 </div>
 
-<div id="wishlistSidebar" class="sidebar">
-    <div class="sidebar-header"><h2>⭐ Istaklar</h2><span class="sidebar-close" onclick="closeWishlist()">&times;</span></div>
-    <div id="wishlistItems"></div>
-</div>
-
-<div id="cartSidebar" class="sidebar">
-    <div class="sidebar-header"><h2>🛒 Savatcha</h2><span class="sidebar-close" onclick="closeCart()">&times;</span></div>
-    <div id="cartItems"></div>
-    <div id="cartTotal"></div>
-    <button class="checkout-btn" onclick="checkout()">✅ Buyurtma</button>
-</div>
-
-<div id="settingsSidebar" class="sidebar">
-    <div class="sidebar-header"><h2>⚙️ Sozlamalar</h2><span class="sidebar-close" onclick="closeSettings()">&times;</span></div>
-    <button class="checkout-btn" onclick="goAdmin()">👑 Admin panel</button>
-</div>
+<div id="wishlistSidebar" class="sidebar"><div class="sidebar-header"><h2>⭐ Istaklar</h2><span class="sidebar-close" onclick="closeWishlist()">&times;</span></div><div id="wishlistItems"></div></div>
+<div id="cartSidebar" class="sidebar"><div class="sidebar-header"><h2>🛒 Savatcha</h2><span class="sidebar-close" onclick="closeCart()">&times;</span></div><div id="cartItems"></div><div id="cartTotal"></div><button class="checkout-btn" onclick="checkout()">✅ Buyurtma berish</button></div>
+<div id="settingsSidebar" class="sidebar"><div class="sidebar-header"><h2>⚙️ Sozlamalar</h2><span class="sidebar-close" onclick="closeSettings()">&times;</span></div><button class="checkout-btn" onclick="goAdmin()">👑 Admin panelga o'tish</button></div>
 
 <script>
+// MAHSULOTLAR (RASMLARI BILAN)
 let products = [
-    {id:1, name:'Sport ko\'ylak', price:380000, size:'L', age:'7-10', image:'https://picsum.photos/id/20/300/200'},
-    {id:2, name:'Krasovkalar', price:450000, size:'38', age:'10-12', image:'https://picsum.photos/id/21/300/200'},
-    {id:3, name:'Soat', price:120000, size:'Universal', age:'8+', image:'https://picsum.photos/id/22/300/200'},
-    {id:4, name:'Shim', price:250000, size:'M', age:'8-10', image:'https://picsum.photos/id/23/300/200'},
-    {id:5, name:'Futbolka', price:180000, size:'XL', age:'12-14', image:'https://picsum.photos/id/24/300/200'},
-    {id:6, name:'Sumka', price:320000, size:'One', age:'10+', image:'https://picsum.photos/id/25/300/200'}
+    {id:1, name:'Sport ko\'ylak', price:380000, size:'L', age:'7-10', image:'https://picsum.photos/id/20/400/300'},
+    {id:2, name:'Krasovkalar', price:450000, size:'38', age:'10-12', image:'https://picsum.photos/id/21/400/300'},
+    {id:3, name:'Soat', price:120000, size:'Universal', age:'8+', image:'https://picsum.photos/id/22/400/300'},
+    {id:4, name:'Shim', price:250000, size:'M', age:'8-10', image:'https://picsum.photos/id/23/400/300'},
+    {id:5, name:'Futbolka', price:180000, size:'XL', age:'12-14', image:'https://picsum.photos/id/24/400/300'},
+    {id:6, name:'Sumka', price:320000, size:'One', age:'10+', image:'https://picsum.photos/id/25/400/300'},
+    {id:7, name:'Shlyapa', price:65000, size:'M', age:'5-8', image:'https://picsum.photos/id/26/400/300'},
+    {id:8, name:'Ko\'zoynak', price:95000, size:'One', age:'7+', image:'https://picsum.photos/id/27/400/300'},
+    {id:9, name:'Jumper', price:210000, size:'L', age:'10-12', image:'https://picsum.photos/id/28/400/300'}
 ];
 let wishlist = [];
 let cart = [];
 let current = null;
 
+function showToast(msg) {
+    let toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+}
+
 function displayProducts() {
     let grid = document.getElementById('grid');
     grid.innerHTML = products.map(p => `
         <div class="product-card" onclick="openModal(${p.id})">
-            <img class="product-image" src="${p.image}">
+            <img class="product-image" src="${p.image}" onerror="this.src='https://picsum.photos/id/1/400/300'">
             <div class="product-info">
                 <div class="product-name">${p.name}</div>
                 <div class="product-price">${p.price.toLocaleString()} so'm</div>
@@ -144,20 +146,23 @@ function addWishlist(id) {
     if(!wishlist.find(w => w.id === id)) {
         wishlist.push(p);
         updateCounts();
-        alert('⭐ Qo\'shildi');
-    }
+        showToast('⭐ Istaklarga qo\'shildi');
+    } else { showToast('⚠️ Allaqachon istaklarda'); }
 }
 
 function addWishlistModal() { addWishlist(current.id); }
 
 function openWishlist() {
     let c = document.getElementById('wishlistItems');
-    if(wishlist.length === 0) { c.innerHTML = '<div class="empty">⭐ Bo\'sh</div>'; }
+    if(wishlist.length === 0) { c.innerHTML = '<div class="empty">⭐ Istaklar ro\'yxati bo\'sh</div>'; }
     else {
         c.innerHTML = wishlist.map(i => `
             <div class="cart-item">
                 <img class="item-image" src="${i.image}">
-                <div class="item-info"><div class="item-name">${i.name}</div><div class="item-price">${i.price.toLocaleString()} so'm</div></div>
+                <div class="item-info">
+                    <div class="item-name">${i.name}</div>
+                    <div class="item-price">${i.price.toLocaleString()} so'm</div>
+                </div>
                 <button class="delete-btn" onclick="removeWishlist(${i.id})">❌</button>
             </div>
         `).join('');
@@ -169,6 +174,7 @@ function removeWishlist(id) {
     wishlist = wishlist.filter(w => w.id !== id);
     updateCounts();
     openWishlist();
+    showToast('🗑️ O\'chirildi');
 }
 
 function closeWishlist() { document.getElementById('wishlistSidebar').classList.remove('active'); }
@@ -178,8 +184,8 @@ function addCart(id) {
     if(!cart.find(c => c.id === id)) {
         cart.push(p);
         updateCounts();
-        alert('🛒 Qo\'shildi');
-    }
+        showToast('🛒 Savatchaga qo\'shildi');
+    } else { showToast('⚠️ Allaqachon savatchada'); }
 }
 
 function addCartModal() { addCart(current.id); }
@@ -187,7 +193,7 @@ function addCartModal() { addCart(current.id); }
 function openCart() {
     let c = document.getElementById('cartItems');
     let t = document.getElementById('cartTotal');
-    if(cart.length === 0) { c.innerHTML = '<div class="empty">🛒 Bo\'sh</div>'; t.innerHTML = ''; }
+    if(cart.length === 0) { c.innerHTML = '<div class="empty">🛒 Savatcha bo\'sh</div>'; t.innerHTML = ''; }
     else {
         let total = cart.reduce((s,i) => s + i.price, 0);
         c.innerHTML = cart.map(i => `
@@ -196,12 +202,12 @@ function openCart() {
                 <div class="item-info">
                     <div class="item-name">${i.name}</div>
                     <div class="item-price">${i.price.toLocaleString()} so'm</div>
-                    <div style="font-size:10px">📏 ${i.size} | 🎂 ${i.age}</div>
+                    <div style="font-size:11px">📏 ${i.size} | 🎂 ${i.age}</div>
                 </div>
                 <button class="delete-btn" onclick="removeCart(${i.id})">❌</button>
             </div>
         `).join('');
-        t.innerHTML = `<div style="margin-top:10px;padding:8px;background:rgba(191,64,255,0.2);border-radius:8px;"><b>💰 Jami: ${total.toLocaleString()} so'm</b></div>`;
+        t.innerHTML = `<div style="margin-top:12px;padding:12px;background:rgba(191,64,255,0.2);border-radius:10px;"><b>💰 Jami: ${total.toLocaleString()} so'm</b></div>`;
     }
     document.getElementById('cartSidebar').classList.add('active');
 }
@@ -210,14 +216,43 @@ function removeCart(id) {
     cart = cart.filter(c => c.id !== id);
     updateCounts();
     openCart();
+    showToast('🗑️ O\'chirildi');
 }
 
 function closeCart() { document.getElementById('cartSidebar').classList.remove('active'); }
 
+// BUYURTMA - TELEGRAMGA YUBORISH
 function checkout() {
-    if(cart.length === 0) { alert('Savatcha bo\'sh'); return; }
+    if(cart.length === 0) { showToast('❌ Savatcha bo\'sh'); return; }
+    
     let total = cart.reduce((s,i) => s + i.price, 0);
-    alert(`✅ Buyurtma qabul qilindi!\nJami: ${total.toLocaleString()} so'm`);
+    let orderText = "🛍 *YANGI BUYURTMA!*\n\n";
+    orderText += "📦 *Mahsulotlar:*\n";
+    cart.forEach((item, idx) => {
+        orderText += `${idx+1}. ${item.name}\n`;
+        orderText += `   💰 Narx: ${item.price.toLocaleString()} so'm\n`;
+        orderText += `   📏 Razmer: ${item.size}\n`;
+        orderText += `   🎂 Yosh: ${item.age}\n`;
+        orderText += `   🖼 Rasm: ${item.image}\n\n`;
+    });
+    orderText += `💰 *JAMI: ${total.toLocaleString()} so'm*\n`;
+    orderText += `📅 Sana: ${new Date().toLocaleString()}`;
+    
+    // Telegram bot orqali yuborish
+    let BOT_TOKEN = "8076388469:AAH6NqFNOu0uFdttd80M_sI0uGm9uLUKP3U";
+    let CHAT_ID = "@Jahongir3616";
+    
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: orderText,
+            parse_mode: 'Markdown'
+        })
+    }).catch(e => console.log('Xato:', e));
+    
+    showToast(`✅ Buyurtma qabul qilindi!\nJami: ${total.toLocaleString()} so'm`);
     cart = [];
     updateCounts();
     closeCart();
@@ -227,9 +262,10 @@ function openSettings() { document.getElementById('settingsSidebar').classList.a
 function closeSettings() { document.getElementById('settingsSidebar').classList.remove('active'); }
 
 function goAdmin() {
-    let pass = prompt('🔐 Parol:');
-    if(pass === '4321') { window.location.href = '/admin.html'; }
-    else { alert('❌ Parol xato!'); }
+    let pass = prompt('🔐 Admin panelga kirish paroli:');
+    if(pass === '4321') {
+        window.location.href = '/admin.html';
+    } else { showToast('❌ Parol xato!'); }
 }
 
 displayProducts();
