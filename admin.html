@@ -1,311 +1,54 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | NEON MARKET</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0a0a2a, #1a0033);
-            color: white;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .header {
-            background: rgba(191,64,255,0.2);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #bf40ff;
-        }
-        .header h1 {
-            color: #bf40ff;
-            font-size: 22px;
-        }
-        .logout-btn {
-            background: #ff4040;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-        .section {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .section h2 {
-            color: #bf40ff;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #bf40ff;
-            padding-bottom: 8px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 8px;
-            border: none;
-            width: calc(100% - 10px);
-        }
-        button {
-            background: #bf40ff;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid rgba(191,64,255,0.3);
-        }
-        th {
-            color: #bf40ff;
-        }
-        .product-img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .form-group {
-            margin-bottom: 12px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #bf40ff;
-        }
-        .edit-btn, .delete-btn {
-            padding: 5px 12px;
-            margin: 2px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .edit-btn {
-            background: #ffa500;
-            color: white;
-        }
-        .delete-btn {
-            background: #ff4040;
-            color: white;
-        }
-        .stats {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: rgba(191,64,255,0.2);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            flex: 1;
-        }
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #bf40ff;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px;
-            color: #bf40ff;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="header">
-        <h1>👑 NEON MARKET | Admin Panel</h1>
-        <button class="logout-btn" onclick="logout()">Chiqish</button>
-    </div>
-    
-    <div class="stats">
-        <div class="stat-card">
-            <div class="stat-number" id="totalCount">0</div>
-            <div>Mahsulotlar</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="totalSum">0</div>
-            <div>Umumiy qiymat</div>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>➕ Mahsulot qo'shish</h2>
-        <div class="form-group">
-            <label>Rasm URL</label>
-            <input type="text" id="imgUrl" placeholder="https://picsum.photos/id/20/400/300">
-        </div>
-        <div class="form-group">
-            <label>Nomi</label>
-            <input type="text" id="name" placeholder="Ko'ylak">
-        </div>
-        <div class="form-group">
-            <label>Narx (so'm)</label>
-            <input type="number" id="price" placeholder="380000">
-        </div>
-        <div class="form-group">
-            <label>Razmer</label>
-            <input type="text" id="size" placeholder="L">
-        </div>
-        <div class="form-group">
-            <label>Yosh</label>
-            <input type="text" id="age" placeholder="7-10">
-        </div>
-        <button onclick="addProduct()">Mahsulot qo'shish</button>
-    </div>
-    
-    <div class="section">
-        <h2>📦 Barcha mahsulotlar</h2>
-        <div id="productsTable">
-            <div class="loading">Yuklanmoqda...</div>
-        </div>
-    </div>
-</div>
+import telebot
+import json
+import base64
+import requests
+import re
 
-<script>
-let products = [
-    {id:1, name:'Sport koylak', price:380000, size:'L', age:'7-10', image:'https://picsum.photos/id/20/400/300'},
-    {id:2, name:'Krasovkalar', price:450000, size:'38', age:'10-12', image:'https://picsum.photos/id/21/400/300'},
-    {id:3, name:'Soat', price:120000, size:'Universal', age:'8+', image:'https://picsum.photos/id/22/400/300'}
-];
+TOKEN = 'BOT_TOKENINGIZ'
+GH_TOKEN = 'GITHUB_TOKENINGIZ' # GitHub personal access token
+REPO = 'jahongirurinbayev292-droid/Pekintovar'
+bot = telebot.TeleBot(TOKEN)
 
-function displayProducts() {
-    let container = document.getElementById('productsTable');
-    if(products.length === 0) {
-        container.innerHTML = '<div class="loading">Mahsulot yoq</div>';
-        return;
-    }
+def update_github(new_product):
+    url = f"https://api.github.com/repos/{REPO}/contents/products.json"
+    headers = {"Authorization": f"token {GH_TOKEN}"}
     
-    let html = '<table><thead><tr><th>Rasm</th><th>Nomi</th><th>Narx</th><th>Razmer</th><th>Yosh</th><th>Amallar</th></tr></thead><tbody>';
+    # Eskisini olish
+    res = requests.get(url, headers=headers).json()
+    content = json.loads(base64.b64decode(res['content']))
+    content.append(new_product)
     
-    for(let i = 0; i < products.length; i++) {
-        let p = products[i];
-        html += '<tr>';
-        html += '<td><img class="product-img" src="' + p.image + '" onerror="this.src=\'https://picsum.photos/id/1/50/50\'"></td>';
-        html += '<td><b>' + p.name + '</b></td>';
-        html += '<td style="color:#bf40ff;">' + p.price.toLocaleString() + " so'm" + '</td>';
-        html += '<td>' + p.size + '</td>';
-        html += '<td>' + p.age + '</td>';
-        html += '<td><button class="edit-btn" onclick="editProduct(' + p.id + ')">Tahrirlash</button> <button class="delete-btn" onclick="deleteProduct(' + p.id + ')">Ochirish</button></td>';
-        html += '</tr>';
-    }
-    
-    html += '</tbody></table>';
-    container.innerHTML = html;
-    updateStats();
-}
+    # Yangisini yozish
+    new_content = base64.b64encode(json.dumps(content, indent=4).encode()).decode()
+    payload = {"message": "Update products", "content": new_content, "sha": res['sha']}
+    requests.put(url, headers=headers, json=payload)
 
-function updateStats() {
-    let totalCount = products.length;
-    let totalSum = 0;
-    for(let i = 0; i < products.length; i++) {
-        totalSum = totalSum + products[i].price;
-    }
-    document.getElementById('totalCount').innerText = totalCount;
-    document.getElementById('totalSum').innerText = totalSum.toLocaleString() + " so'm";
-}
+@bot.message_handler(content_types=['photo'])
+def handle(message):
+    text = message.caption if message.caption else ""
+    
+    # Narx: 380 -> 380000
+    price_val = re.findall(r'\d+', text)
+    price = int(price_val[0]) * 1000 if price_val and int(price_val[0]) < 1000 else 0
+    
+    # Razmer va yoshni qidirish
+    size = re.search(r'razmer\s*(\S+)', text.lower())
+    age = re.search(r'yosh\s*(\S+)', text.lower())
 
-function addProduct() {
-    let name = document.getElementById('name').value;
-    let price = parseInt(document.getElementById('price').value);
-    let size = document.getElementById('size').value;
-    let age = document.getElementById('age').value;
-    let img = document.getElementById('imgUrl').value;
-    
-    if(name === "" || isNaN(price)) {
-        alert("Nomi va narxni kiriting!");
-        return;
-    }
-    
-    if(img === "") {
-        img = "https://picsum.photos/id/20/400/300";
-    }
-    
-    let newId = products.length + 1;
-    let newProduct = {
-        id: newId,
-        name: name,
-        price: price,
-        size: size,
-        age: age,
-        image: img
-    };
-    
-    products.push(newProduct);
-    
-    alert("Mahsulot qoshildi!");
-    
-    document.getElementById('name').value = "";
-    document.getElementById('price').value = "";
-    document.getElementById('size').value = "";
-    document.getElementById('age').value = "";
-    document.getElementById('imgUrl').value = "";
-    
-    displayProducts();
-}
+    # Rasm linki (ImgBB-ga yuklash tavsiya etiladi, hozircha Telegram link)
+    file_id = message.photo[-1].file_id
+    file_path = bot.get_file(file_id).file_path
+    img_url = f"https://api.telegram.org/file/bot{TOKEN}/{file_path}"
 
-function editProduct(id) {
-    let product = null;
-    for(let i = 0; i < products.length; i++) {
-        if(products[i].id === id) {
-            product = products[i];
-            break;
-        }
+    product = {
+        "name": text.split('\n')[0] or "Mahsulot",
+        "price": price,
+        "image": img_url,
+        "size": size.group(1) if size else "Standart",
+        "age": age.group(1) if age else "Noma'lum"
     }
-    
-    if(product === null) return;
-    
-    let newName = prompt("Yangi nom:", product.name);
-    let newPrice = prompt("Yangi narx:", product.price);
-    
-    if(newName !== null && newPrice !== null) {
-        product.name = newName;
-        product.price = parseInt(newPrice);
-        displayProducts();
-        alert("Yangilandi!");
-    }
-}
 
-function deleteProduct(id) {
-    if(confirm("Ochirilsinmi?")) {
-        let newProducts = [];
-        for(let i = 0; i < products.length; i++) {
-            if(products[i].id !== id) {
-                newProducts.push(products[i]);
-            }
-        }
-        products = newProducts;
-        displayProducts();
-        alert("Ochirildi!");
-    }
-}
+    update_github(product)
+    bot.send_message(message.chat.id, f"✅ Saqlandi! Narx: {price}")
 
-function logout() {
-    window.location.href = "/";
-}
-
-displayProducts();
-</script>
-</body>
-</html>
+bot.polling()
